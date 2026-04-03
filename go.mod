@@ -3,7 +3,7 @@ module github.com/PlakarKorp/go-inventory-sdk
 go 1.25.5
 
 require (
-	github.com/PlakarKorp/pkg v1.1.0-beta.4
+	github.com/PlakarKorp/pkg v1.1.0-beta.5
 	google.golang.org/grpc v1.79.3
 	google.golang.org/protobuf v1.36.11
 )
