@@ -35,8 +35,6 @@ type HostEndpoint struct {
 }
 
 type InventoryEntry struct {
-	Error error // Set to report an error during the iteration.
-
 	Class    pkg.ResourceClass    // interpreted
 	SubClass pkg.ResourceSubClass // interpreted
 	Tags     []string             // <value>, <key>=<value>
