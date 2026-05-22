@@ -1,39 +1,15 @@
-package sdk
+package server
 
 import (
-	"context"
 	"errors"
 	"fmt"
 	"io"
 	"net"
 	"os"
 
-	"github.com/PlakarKorp/go-inventory-sdk/inventory"
+	"github.com/PlakarKorp/go-inventory-sdk/sdk"
 	"google.golang.org/grpc"
 )
-
-type InventoryFn func(context.Context, map[string]string) (inventory.Inventory, error)
-
-type grpcInventory struct {
-	UnimplementedInventoryServer
-
-	inventory   inventory.Inventory
-	constructor InventoryFn
-}
-
-func (g *grpcInventory) Init(ctx context.Context, req *InitRequest) (*InitResponse, error) {
-	inventory, err := g.constructor(ctx, req.Config)
-	if err != nil {
-		return nil, err
-	}
-
-	g.inventory = inventory
-	return &InitResponse{}, nil
-}
-
-func (g *grpcInventory) List(req *ListRequest, stream grpc.ServerStreamingServer[ListResponse]) error {
-	return errors.ErrUnsupported
-}
 
 func RunInventory(constructor InventoryFn) error {
 	conn, listener, err := InitConn()
@@ -47,9 +23,7 @@ func RunInventory(constructor InventoryFn) error {
 
 func RunImporterOn(constructor InventoryFn, listener net.Listener) error {
 	server := grpc.NewServer()
-	RegisterInventoryServer(server, &grpcInventory{
-		constructor: constructor,
-	})
+	sdk.RegisterInventoryServer(server, NewGrpcInventoryServer(constructor))
 	if err := server.Serve(listener); err != nil {
 		return err
 	}
