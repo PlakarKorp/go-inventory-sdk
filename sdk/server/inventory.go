@@ -2,6 +2,7 @@ package server
 
 import (
 	"context"
+	"errors"
 
 	"github.com/PlakarKorp/go-inventory-sdk/inventory"
 	"github.com/PlakarKorp/go-inventory-sdk/sdk"
@@ -37,8 +38,10 @@ func (g *grpcInventoryServer) Init(ctx context.Context, req *sdk.InitRequest) (*
 
 func (g *grpcInventoryServer) List(req *sdk.ListRequest, stream grpc.ServerStreamingServer[sdk.ListResponse]) error {
 	entries := make(chan *inventory.InventoryEntry, g.maxconcurrency)
-	ctx, cancel := context.WithCancel(stream.Context())
-	defer cancel()
+	ctx, cancel := context.WithCancelCause(stream.Context())
+	defer cancel(nil) // needed?
+
+	senderr := errors.New("send error")
 
 	var wg errgroup.Group
 
@@ -64,6 +67,9 @@ func (g *grpcInventoryServer) List(req *sdk.ListRequest, stream grpc.ServerStrea
 			}
 
 			if err := stream.Send(&sdk.ListResponse{Entry: entry}); err != nil {
+				cancel(senderr)
+				for range entries {
+				}
 				return err
 			}
 		}
@@ -71,9 +77,15 @@ func (g *grpcInventoryServer) List(req *sdk.ListRequest, stream grpc.ServerStrea
 		return nil
 	})
 
-	if err := g.inventory.List(ctx, entries); err != nil {
+	err := g.inventory.List(ctx, entries)
+	wgerr := wg.Wait()
+
+	if err != nil {
+		if ctx.Err() == context.Canceled && context.Cause(ctx) == senderr {
+			return wgerr
+		}
 		return err
 	}
 
-	return wg.Wait()
+	return nil
 }
