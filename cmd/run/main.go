@@ -5,8 +5,10 @@ import (
 	"encoding/json"
 	"flag"
 	"fmt"
+	"log"
 	"os"
 	"os/exec"
+	"path/filepath"
 	"strings"
 
 	"github.com/PlakarKorp/go-inventory-sdk/inventory"
@@ -14,11 +16,20 @@ import (
 	"github.com/PlakarKorp/pkg"
 )
 
+func usage() {
+	fmt.Fprintf(os.Stderr, "usage: %s [-config file] [-o key=value] inventory-cmd\n",
+		filepath.Base(os.Args[0]))
+	os.Exit(1)
+}
+
 func main() {
 	var (
 		opt_conffile string
 		config       = make(map[string]string)
 	)
+
+	log.SetPrefix(filepath.Base(os.Args[0]) + ": ")
+	log.SetFlags(0)
 
 	flag.StringVar(&opt_conffile, "config", "", "config file")
 	flag.Func("o", "", func(o string) error {
@@ -30,24 +41,23 @@ func main() {
 		return nil
 	})
 
+	flag.Usage = usage
 	flag.Parse()
 	if flag.NArg() == 0 {
-		fmt.Println("Missing executable")
-		os.Exit(1)
+		log.Println("missing executable")
+		usage()
 	}
 
 	if opt_conffile != "" {
 		file, err := os.Open(opt_conffile)
 		if err != nil {
-			fmt.Println("os.Open:", err)
-			os.Exit(1)
+			log.Fatalf("cannot open %s: %v", opt_conffile, err)
 		}
 
 		var conf map[string]string
 		err = json.NewDecoder(file).Decode(&conf)
 		if err != nil {
-			fmt.Println("failed to decode json:", err)
-			os.Exit(1)
+			log.Fatalln("failed to decode json:", err)
 		}
 
 		for key, value := range conf {
@@ -64,8 +74,7 @@ func main() {
 		case strings.HasPrefix(value, "cmd:"):
 			out, err := exec.Command("/bin/sh", "-c", value[4:]).CombinedOutput()
 			if err != nil {
-				fmt.Println("exec.Command:", err)
-				os.Exit(1)
+				log.Fatalf("failed to exec %q: %v", value[4:], err)
 			}
 			value = strings.TrimRight(string(out), "\r\n")
 		case strings.HasPrefix(value, "val:"):
@@ -80,22 +89,19 @@ func main() {
 	args := flag.Args()[1:]
 	client, conn, err := sdk.ConnectPlugin(ctx, bin, args)
 	if err != nil {
-		fmt.Println("ConnectPlugin:", err)
-		os.Exit(1)
+		log.Fatalln("ConnectPlugin failed:", err)
 	}
 
 	inv, err := sdk.NewGrpcInventory(ctx, client, config)
 	if err != nil {
-		fmt.Println("NewGrpcInventory:", err)
-		os.Exit(1)
+		log.Fatalln("NewGrpcInventory failed:", err)
 	}
 
 	run(ctx, inv)
 
 	err = conn.Close()
 	if err != nil {
-		fmt.Println("conn.Close:", err)
-		os.Exit(1)
+		log.Fatalln("conn.Close:", err)
 	}
 }
 
@@ -119,8 +125,7 @@ func run(ctx context.Context, inv inventory.Inventory) {
 	}()
 
 	if err := inv.List(ctx, c); err != nil {
-		fmt.Println("Error", err)
-		os.Exit(1)
+		log.Fatalln("inventory list failed:", err)
 	}
 
 	<-done
