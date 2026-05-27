@@ -15,15 +15,26 @@ import (
 )
 
 func main() {
-	var opt_conffile string
+	var (
+		opt_conffile string
+		config       = make(map[string]string)
+	)
+
 	flag.StringVar(&opt_conffile, "config", "", "config file")
+	flag.Func("o", "", func(o string) error {
+		k, v, ok := strings.Cut(o, "=")
+		if !ok {
+			return fmt.Errorf("expected key=value, got %q", o)
+		}
+		config[k] = v
+		return nil
+	})
+
 	flag.Parse()
 	if flag.NArg() == 0 {
 		fmt.Println("Missing executable")
 		os.Exit(1)
 	}
-
-	config := make(map[string]string)
 
 	if opt_conffile != "" {
 		file, err := os.Open(opt_conffile)
@@ -35,27 +46,33 @@ func main() {
 		var conf map[string]string
 		err = json.NewDecoder(file).Decode(&conf)
 		if err != nil {
-			fmt.Println("os.Open:", err)
+			fmt.Println("failed to decode json:", err)
 			os.Exit(1)
 		}
 
 		for key, value := range conf {
-			switch {
-			case strings.HasPrefix(value, "env:"):
-				value = os.Getenv(value[4:])
-			case strings.HasPrefix(value, "cmd:"):
-				out, err := exec.Command("/bin/sh", "-c", value[4:]).CombinedOutput()
-				if err != nil {
-					fmt.Println("exec.Command:", err)
-					os.Exit(1)
-				}
-				value = strings.TrimRight(string(out), "\r\n")
-			case strings.HasPrefix(value, "val:"):
-				value = value[4:]
-			default:
+			if _, ok := config[key]; !ok {
+				config[key] = value
 			}
-			config[key] = value
 		}
+	}
+
+	for key, value := range config {
+		switch {
+		case strings.HasPrefix(value, "env:"):
+			value = os.Getenv(value[4:])
+		case strings.HasPrefix(value, "cmd:"):
+			out, err := exec.Command("/bin/sh", "-c", value[4:]).CombinedOutput()
+			if err != nil {
+				fmt.Println("exec.Command:", err)
+				os.Exit(1)
+			}
+			value = strings.TrimRight(string(out), "\r\n")
+		case strings.HasPrefix(value, "val:"):
+			value = value[4:]
+		default:
+		}
+		config[key] = value
 	}
 
 	ctx := context.Background()
