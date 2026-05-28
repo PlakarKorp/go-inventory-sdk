@@ -35,11 +35,24 @@ type HostEndpoint struct {
 	Endpoint string
 }
 
-// Locator describes one way a resource can be reached. Protocol identifies
-// the addressing scheme (e.g. "ssh", "https", "scaleway-api", "nfs"); the
-// meaning of Attributes is defined per-protocol.
+type LocatorType string
+
+const (
+	LocatorUndefined LocatorType = ""
+	LocatorHost      LocatorType = "host"
+	LocatorInet4     LocatorType = "inet4"
+	LocatorInet6     LocatorType = "inet6"
+	LocatorUUID      LocatorType = "uuid"
+)
+
+// Locator describes one way a resource can be reached. Type identifies
+// the addressing scheme (e.g. "ssh", "https", "scaleway-api", "nfs").
+// Identifier carries the primary value for that type (an IP, a hostname,
+// a UUID, an ARN, a URL). Attributes holds type-specific extras (port,
+// path, region, role, ...); their meaning is defined per-type.
 type Locator struct {
-	Protocol   EndpointType
+	Type       LocatorType
+	Identifier string
 	Attributes map[string]string
 }
 
