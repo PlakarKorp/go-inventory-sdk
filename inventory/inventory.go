@@ -39,7 +39,7 @@ type HostEndpoint struct {
 // the addressing scheme (e.g. "ssh", "https", "scaleway-api", "nfs"); the
 // meaning of Attributes is defined per-protocol.
 type Locator struct {
-	Protocol   string
+	Protocol   EndpointType
 	Attributes map[string]string
 }
 
