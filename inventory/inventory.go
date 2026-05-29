@@ -35,6 +35,17 @@ type HostEndpoint struct {
 	Endpoint string
 }
 
+// Locator describes one way a resource can be reached. Type identifies
+// the addressing scheme (e.g. "ssh", "https", "scaleway-api", "nfs").
+// Identifier carries the primary value for that type (an IP, a hostname,
+// a UUID, an ARN, a URL). Attributes holds type-specific extras (port,
+// path, region, role, ...); their meaning is defined per-type.
+type Locator struct {
+	Type       string
+	Identifier string
+	Attributes map[string]string
+}
+
 type InventoryEntry struct {
 	Class    pkg.ResourceClass    // interpreted
 	SubClass pkg.ResourceSubClass // interpreted
@@ -48,6 +59,7 @@ type InventoryEntry struct {
 	Resource  string // s3:bucket, ec2:volume, ...
 	Details   []byte // Additional backend-specific content
 	Endpoints []HostEndpoint
+	Locators  []Locator
 }
 
 func EndpointTypeFromString(t string) (EndpointType, error) {
