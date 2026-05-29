@@ -21,6 +21,12 @@ message HostEndpoint {
   string endpoint = 2;
 }
 
+message Locator {
+  string type = 1;
+  string identifier = 2;
+  map<string, string> attributes = 3;
+}
+
 message InventoryEntry {
   string class = 1;
   string subclass = 2;
@@ -32,6 +38,7 @@ message InventoryEntry {
   string resource = 8;
   bytes details = 9;
   repeated HostEndpoint endpoints = 10;
+  repeated Locator locators = 11;
 }
 
 message ListRequest {

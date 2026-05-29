@@ -153,6 +153,66 @@ func (x *HostEndpoint) GetEndpoint() string {
 	return ""
 }
 
+type Locator struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Type          string                 `protobuf:"bytes,1,opt,name=type,proto3" json:"type,omitempty"`
+	Identifier    string                 `protobuf:"bytes,2,opt,name=identifier,proto3" json:"identifier,omitempty"`
+	Attributes    map[string]string      `protobuf:"bytes,3,rep,name=attributes,proto3" json:"attributes,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *Locator) Reset() {
+	*x = Locator{}
+	mi := &file_inventory_proto_msgTypes[3]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *Locator) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Locator) ProtoMessage() {}
+
+func (x *Locator) ProtoReflect() protoreflect.Message {
+	mi := &file_inventory_proto_msgTypes[3]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use Locator.ProtoReflect.Descriptor instead.
+func (*Locator) Descriptor() ([]byte, []int) {
+	return file_inventory_proto_rawDescGZIP(), []int{3}
+}
+
+func (x *Locator) GetType() string {
+	if x != nil {
+		return x.Type
+	}
+	return ""
+}
+
+func (x *Locator) GetIdentifier() string {
+	if x != nil {
+		return x.Identifier
+	}
+	return ""
+}
+
+func (x *Locator) GetAttributes() map[string]string {
+	if x != nil {
+		return x.Attributes
+	}
+	return nil
+}
+
 type InventoryEntry struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Class         string                 `protobuf:"bytes,1,opt,name=class,proto3" json:"class,omitempty"`
@@ -165,13 +225,14 @@ type InventoryEntry struct {
 	Resource      string                 `protobuf:"bytes,8,opt,name=resource,proto3" json:"resource,omitempty"`
 	Details       []byte                 `protobuf:"bytes,9,opt,name=details,proto3" json:"details,omitempty"`
 	Endpoints     []*HostEndpoint        `protobuf:"bytes,10,rep,name=endpoints,proto3" json:"endpoints,omitempty"`
+	Locators      []*Locator             `protobuf:"bytes,11,rep,name=locators,proto3" json:"locators,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *InventoryEntry) Reset() {
 	*x = InventoryEntry{}
-	mi := &file_inventory_proto_msgTypes[3]
+	mi := &file_inventory_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -183,7 +244,7 @@ func (x *InventoryEntry) String() string {
 func (*InventoryEntry) ProtoMessage() {}
 
 func (x *InventoryEntry) ProtoReflect() protoreflect.Message {
-	mi := &file_inventory_proto_msgTypes[3]
+	mi := &file_inventory_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -196,7 +257,7 @@ func (x *InventoryEntry) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use InventoryEntry.ProtoReflect.Descriptor instead.
 func (*InventoryEntry) Descriptor() ([]byte, []int) {
-	return file_inventory_proto_rawDescGZIP(), []int{3}
+	return file_inventory_proto_rawDescGZIP(), []int{4}
 }
 
 func (x *InventoryEntry) GetClass() string {
@@ -269,6 +330,13 @@ func (x *InventoryEntry) GetEndpoints() []*HostEndpoint {
 	return nil
 }
 
+func (x *InventoryEntry) GetLocators() []*Locator {
+	if x != nil {
+		return x.Locators
+	}
+	return nil
+}
+
 type ListRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	unknownFields protoimpl.UnknownFields
@@ -277,7 +345,7 @@ type ListRequest struct {
 
 func (x *ListRequest) Reset() {
 	*x = ListRequest{}
-	mi := &file_inventory_proto_msgTypes[4]
+	mi := &file_inventory_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -289,7 +357,7 @@ func (x *ListRequest) String() string {
 func (*ListRequest) ProtoMessage() {}
 
 func (x *ListRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_inventory_proto_msgTypes[4]
+	mi := &file_inventory_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -302,7 +370,7 @@ func (x *ListRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListRequest.ProtoReflect.Descriptor instead.
 func (*ListRequest) Descriptor() ([]byte, []int) {
-	return file_inventory_proto_rawDescGZIP(), []int{4}
+	return file_inventory_proto_rawDescGZIP(), []int{5}
 }
 
 type ListResponse struct {
@@ -314,7 +382,7 @@ type ListResponse struct {
 
 func (x *ListResponse) Reset() {
 	*x = ListResponse{}
-	mi := &file_inventory_proto_msgTypes[5]
+	mi := &file_inventory_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -326,7 +394,7 @@ func (x *ListResponse) String() string {
 func (*ListResponse) ProtoMessage() {}
 
 func (x *ListResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_inventory_proto_msgTypes[5]
+	mi := &file_inventory_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -339,7 +407,7 @@ func (x *ListResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListResponse.ProtoReflect.Descriptor instead.
 func (*ListResponse) Descriptor() ([]byte, []int) {
-	return file_inventory_proto_rawDescGZIP(), []int{5}
+	return file_inventory_proto_rawDescGZIP(), []int{6}
 }
 
 func (x *ListResponse) GetEntry() *InventoryEntry {
@@ -357,7 +425,7 @@ type CloseRequest struct {
 
 func (x *CloseRequest) Reset() {
 	*x = CloseRequest{}
-	mi := &file_inventory_proto_msgTypes[6]
+	mi := &file_inventory_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -369,7 +437,7 @@ func (x *CloseRequest) String() string {
 func (*CloseRequest) ProtoMessage() {}
 
 func (x *CloseRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_inventory_proto_msgTypes[6]
+	mi := &file_inventory_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -382,7 +450,7 @@ func (x *CloseRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CloseRequest.ProtoReflect.Descriptor instead.
 func (*CloseRequest) Descriptor() ([]byte, []int) {
-	return file_inventory_proto_rawDescGZIP(), []int{6}
+	return file_inventory_proto_rawDescGZIP(), []int{7}
 }
 
 type CloseResponse struct {
@@ -393,7 +461,7 @@ type CloseResponse struct {
 
 func (x *CloseResponse) Reset() {
 	*x = CloseResponse{}
-	mi := &file_inventory_proto_msgTypes[7]
+	mi := &file_inventory_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -405,7 +473,7 @@ func (x *CloseResponse) String() string {
 func (*CloseResponse) ProtoMessage() {}
 
 func (x *CloseResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_inventory_proto_msgTypes[7]
+	mi := &file_inventory_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -418,7 +486,7 @@ func (x *CloseResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CloseResponse.ProtoReflect.Descriptor instead.
 func (*CloseResponse) Descriptor() ([]byte, []int) {
-	return file_inventory_proto_rawDescGZIP(), []int{7}
+	return file_inventory_proto_rawDescGZIP(), []int{8}
 }
 
 var File_inventory_proto protoreflect.FileDescriptor
@@ -434,7 +502,18 @@ const file_inventory_proto_rawDesc = "" +
 	"\fInitResponse\">\n" +
 	"\fHostEndpoint\x12\x12\n" +
 	"\x04type\x18\x01 \x01(\tR\x04type\x12\x1a\n" +
-	"\bendpoint\x18\x02 \x01(\tR\bendpoint\"\x9b\x02\n" +
+	"\bendpoint\x18\x02 \x01(\tR\bendpoint\"\xc0\x01\n" +
+	"\aLocator\x12\x12\n" +
+	"\x04type\x18\x01 \x01(\tR\x04type\x12\x1e\n" +
+	"\n" +
+	"identifier\x18\x02 \x01(\tR\n" +
+	"identifier\x12B\n" +
+	"\n" +
+	"attributes\x18\x03 \x03(\v2\".inventory.Locator.AttributesEntryR\n" +
+	"attributes\x1a=\n" +
+	"\x0fAttributesEntry\x12\x10\n" +
+	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
+	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\"\xcb\x02\n" +
 	"\x0eInventoryEntry\x12\x14\n" +
 	"\x05class\x18\x01 \x01(\tR\x05class\x12\x1a\n" +
 	"\bsubclass\x18\x02 \x01(\tR\bsubclass\x12\x12\n" +
@@ -446,7 +525,8 @@ const file_inventory_proto_rawDesc = "" +
 	"\bresource\x18\b \x01(\tR\bresource\x12\x18\n" +
 	"\adetails\x18\t \x01(\fR\adetails\x125\n" +
 	"\tendpoints\x18\n" +
-	" \x03(\v2\x17.inventory.HostEndpointR\tendpoints\"\r\n" +
+	" \x03(\v2\x17.inventory.HostEndpointR\tendpoints\x12.\n" +
+	"\blocators\x18\v \x03(\v2\x12.inventory.LocatorR\blocators\"\r\n" +
 	"\vListRequest\"?\n" +
 	"\fListResponse\x12/\n" +
 	"\x05entry\x18\x01 \x01(\v2\x19.inventory.InventoryEntryR\x05entry\"\x0e\n" +
@@ -469,33 +549,37 @@ func file_inventory_proto_rawDescGZIP() []byte {
 	return file_inventory_proto_rawDescData
 }
 
-var file_inventory_proto_msgTypes = make([]protoimpl.MessageInfo, 9)
+var file_inventory_proto_msgTypes = make([]protoimpl.MessageInfo, 11)
 var file_inventory_proto_goTypes = []any{
 	(*InitRequest)(nil),    // 0: inventory.InitRequest
 	(*InitResponse)(nil),   // 1: inventory.InitResponse
 	(*HostEndpoint)(nil),   // 2: inventory.HostEndpoint
-	(*InventoryEntry)(nil), // 3: inventory.InventoryEntry
-	(*ListRequest)(nil),    // 4: inventory.ListRequest
-	(*ListResponse)(nil),   // 5: inventory.ListResponse
-	(*CloseRequest)(nil),   // 6: inventory.CloseRequest
-	(*CloseResponse)(nil),  // 7: inventory.CloseResponse
-	nil,                    // 8: inventory.InitRequest.ConfigEntry
+	(*Locator)(nil),        // 3: inventory.Locator
+	(*InventoryEntry)(nil), // 4: inventory.InventoryEntry
+	(*ListRequest)(nil),    // 5: inventory.ListRequest
+	(*ListResponse)(nil),   // 6: inventory.ListResponse
+	(*CloseRequest)(nil),   // 7: inventory.CloseRequest
+	(*CloseResponse)(nil),  // 8: inventory.CloseResponse
+	nil,                    // 9: inventory.InitRequest.ConfigEntry
+	nil,                    // 10: inventory.Locator.AttributesEntry
 }
 var file_inventory_proto_depIdxs = []int32{
-	8, // 0: inventory.InitRequest.config:type_name -> inventory.InitRequest.ConfigEntry
-	2, // 1: inventory.InventoryEntry.endpoints:type_name -> inventory.HostEndpoint
-	3, // 2: inventory.ListResponse.entry:type_name -> inventory.InventoryEntry
-	0, // 3: inventory.Inventory.Init:input_type -> inventory.InitRequest
-	4, // 4: inventory.Inventory.List:input_type -> inventory.ListRequest
-	6, // 5: inventory.Inventory.Close:input_type -> inventory.CloseRequest
-	1, // 6: inventory.Inventory.Init:output_type -> inventory.InitResponse
-	5, // 7: inventory.Inventory.List:output_type -> inventory.ListResponse
-	7, // 8: inventory.Inventory.Close:output_type -> inventory.CloseResponse
-	6, // [6:9] is the sub-list for method output_type
-	3, // [3:6] is the sub-list for method input_type
-	3, // [3:3] is the sub-list for extension type_name
-	3, // [3:3] is the sub-list for extension extendee
-	0, // [0:3] is the sub-list for field type_name
+	9,  // 0: inventory.InitRequest.config:type_name -> inventory.InitRequest.ConfigEntry
+	10, // 1: inventory.Locator.attributes:type_name -> inventory.Locator.AttributesEntry
+	2,  // 2: inventory.InventoryEntry.endpoints:type_name -> inventory.HostEndpoint
+	3,  // 3: inventory.InventoryEntry.locators:type_name -> inventory.Locator
+	4,  // 4: inventory.ListResponse.entry:type_name -> inventory.InventoryEntry
+	0,  // 5: inventory.Inventory.Init:input_type -> inventory.InitRequest
+	5,  // 6: inventory.Inventory.List:input_type -> inventory.ListRequest
+	7,  // 7: inventory.Inventory.Close:input_type -> inventory.CloseRequest
+	1,  // 8: inventory.Inventory.Init:output_type -> inventory.InitResponse
+	6,  // 9: inventory.Inventory.List:output_type -> inventory.ListResponse
+	8,  // 10: inventory.Inventory.Close:output_type -> inventory.CloseResponse
+	8,  // [8:11] is the sub-list for method output_type
+	5,  // [5:8] is the sub-list for method input_type
+	5,  // [5:5] is the sub-list for extension type_name
+	5,  // [5:5] is the sub-list for extension extendee
+	0,  // [0:5] is the sub-list for field type_name
 }
 
 func init() { file_inventory_proto_init() }
@@ -509,7 +593,7 @@ func file_inventory_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_inventory_proto_rawDesc), len(file_inventory_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   9,
+			NumMessages:   11,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
