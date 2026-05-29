@@ -66,6 +66,14 @@ func (g *grpcInventoryServer) List(req *sdk.ListRequest, stream grpc.ServerStrea
 				})
 			}
 
+			for _, l := range res.Locators {
+				entry.Locators = append(entry.Locators, &sdk.Locator{
+					Type:       l.Type,
+					Identifier: l.Identifier,
+					Attributes: l.Attributes,
+				})
+			}
+
 			if err := stream.Send(&sdk.ListResponse{Entry: entry}); err != nil {
 				cancel(senderr)
 				for range entries {

@@ -111,6 +111,14 @@ func (inv *grpcInventoryClient) List(ctx context.Context, entries chan<- *invent
 			})
 		}
 
+		for _, l := range res.Entry.GetLocators() {
+			entry.Locators = append(entry.Locators, inventory.Locator{
+				Type:       l.Type,
+				Identifier: l.Identifier,
+				Attributes: l.Attributes,
+			})
+		}
+
 		entries <- entry
 	}
 }
