@@ -39,10 +39,8 @@ type LocatorType string
 
 const (
 	LocatorUndefined LocatorType = ""
-	LocatorHost      LocatorType = "host"
-	LocatorInet4     LocatorType = "inet4"
-	LocatorInet6     LocatorType = "inet6"
-	LocatorUUID      LocatorType = "uuid"
+	LocatorAddress   LocatorType = "address"
+	LocatorID        LocatorType = "id"
 )
 
 // Locator describes one way a resource can be reached. Type identifies
