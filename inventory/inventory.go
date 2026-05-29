@@ -35,21 +35,13 @@ type HostEndpoint struct {
 	Endpoint string
 }
 
-type LocatorType string
-
-const (
-	LocatorUndefined LocatorType = ""
-	LocatorAddress   LocatorType = "address"
-	LocatorID        LocatorType = "id"
-)
-
 // Locator describes one way a resource can be reached. Type identifies
 // the addressing scheme (e.g. "ssh", "https", "scaleway-api", "nfs").
 // Identifier carries the primary value for that type (an IP, a hostname,
 // a UUID, an ARN, a URL). Attributes holds type-specific extras (port,
 // path, region, role, ...); their meaning is defined per-type.
 type Locator struct {
-	Type       LocatorType
+	Type       string
 	Identifier string
 	Attributes map[string]string
 }
