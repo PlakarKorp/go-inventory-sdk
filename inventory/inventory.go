@@ -15,6 +15,7 @@ const (
 	EndpointHost       EndpointType = "host"
 	EndpointInet4      EndpointType = "inet4"
 	EndpointInet6      EndpointType = "inet6"
+	EndpointNetwork    EndpointType = "network"
 	EndpointIdentifier EndpointType = "identifier"
 )
 
