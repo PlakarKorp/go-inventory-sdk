@@ -61,16 +61,9 @@ func (g *grpcInventoryServer) List(req *sdk.ListRequest, stream grpc.ServerStrea
 
 			for _, e := range res.Endpoints {
 				entry.Endpoints = append(entry.Endpoints, &sdk.HostEndpoint{
-					Type:     string(e.Type),
-					Endpoint: e.Endpoint,
-				})
-			}
-
-			for _, l := range res.Locators {
-				entry.Locators = append(entry.Locators, &sdk.Locator{
-					Type:       l.Type,
-					Identifier: l.Identifier,
-					Attributes: l.Attributes,
+					Type:       string(e.Type),
+					Endpoint:   e.Endpoint,
+					Attributes: e.Attributes,
 				})
 			}
 

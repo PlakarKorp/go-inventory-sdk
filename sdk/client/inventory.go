@@ -106,16 +106,9 @@ func (inv *grpcInventoryClient) List(ctx context.Context, entries chan<- *invent
 
 		for _, e := range res.Entry.GetEndpoints() {
 			entry.Endpoints = append(entry.Endpoints, inventory.HostEndpoint{
-				Type:     inventory.EndpointType(e.Type),
-				Endpoint: e.Endpoint,
-			})
-		}
-
-		for _, l := range res.Entry.GetLocators() {
-			entry.Locators = append(entry.Locators, inventory.Locator{
-				Type:       l.Type,
-				Identifier: l.Identifier,
-				Attributes: l.Attributes,
+				Type:       inventory.EndpointType(e.Type),
+				Endpoint:   e.Endpoint,
+				Attributes: e.Attributes,
 			})
 		}
 
