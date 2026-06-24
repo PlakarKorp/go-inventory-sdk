@@ -92,5 +92,8 @@ func (g *grpcInventoryServer) List(req *sdk.ListRequest, stream grpc.ServerStrea
 }
 
 func (g *grpcInventoryServer) Close(ctx context.Context, _ *sdk.CloseRequest) (*sdk.CloseResponse, error) {
-	return nil, g.inventory.Close(ctx)
+	if err := g.inventory.Close(ctx); err != nil {
+		return nil, err
+	}
+	return &sdk.CloseResponse{}, nil
 }
