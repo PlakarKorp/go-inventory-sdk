@@ -80,5 +80,10 @@ func ExecInventory(ctx context.Context, params map[string]string, exe string, ar
 	}
 
 	inv, err := NewGrpcInventory(ctx, conn, params)
-	return &grpcinventory{inv, conn}, err
+	if err != nil {
+		conn.Close()
+		return nil, err
+	}
+
+	return &grpcinventory{inv, conn}, nil
 }
