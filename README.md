@@ -1,5 +1,9 @@
 # Inventory SDK
 
+[![Go Reference](https://pkg.go.dev/badge/github.com/PlakarKorp/go-inventory-sdk.svg)](https://pkg.go.dev/github.com/PlakarKorp/go-inventory-sdk)
+[![Go Report Card](https://goreportcard.com/badge/github.com/PlakarKorp/go-inventory-sdk)](https://goreportcard.com/report/github.com/PlakarKorp/go-inventory-sdk)
+[![License: ISC](https://img.shields.io/badge/License-ISC-blue.svg)](LICENSE)
+
 This repo contains the SDK for Plakar Control-Plane Inventories.
 Inventories are plugins that list resources (computes, buckets,
 databases, etc...) in a cloud provider, or similar.
