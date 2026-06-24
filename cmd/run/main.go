@@ -105,7 +105,6 @@ func show(v any) string {
 }
 
 func run(ctx context.Context, inv inventory.Inventory) {
-
 	c := make(chan *inventory.InventoryEntry)
 	done := make(chan struct{})
 
