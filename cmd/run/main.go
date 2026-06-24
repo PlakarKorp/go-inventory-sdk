@@ -87,21 +87,15 @@ func main() {
 	ctx := context.Background()
 	bin := flag.Arg(0)
 	args := flag.Args()[1:]
-	client, conn, err := sdk.ConnectPlugin(ctx, bin, args)
+	inv, err := sdk.ExecInventory(ctx, config, bin, args)
 	if err != nil {
 		log.Fatalln("ConnectPlugin failed:", err)
 	}
 
-	inv, err := sdk.NewGrpcInventory(ctx, client, config)
-	if err != nil {
-		log.Fatalln("NewGrpcInventory failed:", err)
-	}
-
 	run(ctx, inv)
 
-	err = conn.Close()
-	if err != nil {
-		log.Fatalln("conn.Close:", err)
+	if err := inv.Close(ctx); err != nil {
+		log.Fatalln("inventory close failed:", err)
 	}
 }
 
