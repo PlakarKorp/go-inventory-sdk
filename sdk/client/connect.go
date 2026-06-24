@@ -77,7 +77,7 @@ func spawn(ctx context.Context, exe string, args []string) (*grpc.ClientConn, er
 		conn.Close()
 		return nil, err
 	}
-	return client, err
+	return client, nil
 }
 
 func ExecInventory(ctx context.Context, params map[string]string, exe string, args []string) (inventory.Inventory, error) {
