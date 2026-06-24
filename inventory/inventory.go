@@ -11,11 +11,13 @@ import (
 type EndpointType string
 
 const (
-	EndpointUndefined EndpointType = ""
-	EndpointHost      EndpointType = "host"
-	EndpointInet4     EndpointType = "inet4"
-	EndpointInet6     EndpointType = "inet6"
-	EndpointUUID      EndpointType = "uuid"
+	EndpointUndefined  EndpointType = ""
+	EndpointHost       EndpointType = "host"
+	EndpointInet4      EndpointType = "inet4"
+	EndpointInet6      EndpointType = "inet6"
+	EndpointUUID       EndpointType = "uuid"
+	EndpointNetwork    EndpointType = "network"
+	EndpointIdentifier EndpointType = "identifier"
 )
 
 var (
@@ -31,21 +33,10 @@ type Inventory interface {
 }
 
 type HostEndpoint struct {
-	Type     EndpointType
-	Endpoint string
-}
-
-// Locator describes one way a resource can be reached. Type identifies
-// the addressing scheme (e.g. "ssh", "https", "scaleway-api", "nfs").
-// Identifier carries the primary value for that type (an IP, a hostname,
-// a UUID, an ARN, a URL). Attributes holds type-specific extras (port,
-// path, region, role, ...); their meaning is defined per-type.
-type Locator struct {
-	Type       string
-	Identifier string
+	Type       EndpointType
+	Endpoint   string
 	Attributes map[string]string
 }
-
 type InventoryEntry struct {
 	Class    pkg.ResourceClass    // interpreted
 	SubClass pkg.ResourceSubClass // interpreted
@@ -59,7 +50,6 @@ type InventoryEntry struct {
 	Resource  string // s3:bucket, ec2:volume, ...
 	Details   []byte // Additional backend-specific content
 	Endpoints []HostEndpoint
-	Locators  []Locator
 }
 
 func EndpointTypeFromString(t string) (EndpointType, error) {
@@ -68,7 +58,7 @@ func EndpointTypeFromString(t string) (EndpointType, error) {
 	case EndpointHost:
 	case EndpointInet4:
 	case EndpointInet6:
-
+	case EndpointIdentifier:
 	default:
 		return e, fmt.Errorf("%w: %s", ErrUnknownEndpointType, t)
 	}
