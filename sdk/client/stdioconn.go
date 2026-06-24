@@ -4,14 +4,9 @@ import (
 	"net"
 	"os"
 	"os/exec"
+	"sync"
 	"time"
 )
-
-type ExitConn interface {
-	net.Conn
-	Exited() <-chan struct{}
-	WaitErr() error
-}
 
 var stdioaddr = &net.UnixAddr{Name: "stdio", Net: "unix"}
 
@@ -20,31 +15,18 @@ type StdioConn struct {
 	stdout *os.File
 	cmd    *exec.Cmd
 
-	exited chan struct{}
-
-	waitErr error
+	// thanks to grpc, we might end up in Close multiple times
+	closeOnce sync.Once
+	closeErr  error
 }
 
-func NewStdioConn(stdin, stdout *os.File, cmd *exec.Cmd) ExitConn {
+func NewStdioConn(stdin, stdout *os.File, cmd *exec.Cmd) net.Conn {
 	c := &StdioConn{
 		stdin:  stdin,
 		stdout: stdout,
 		cmd:    cmd,
-		exited: make(chan struct{}),
 	}
-	go func() {
-		c.waitErr = cmd.Wait()
-		close(c.exited)
-	}()
 	return c
-}
-
-func (c *StdioConn) Exited() <-chan struct{} {
-	return c.exited
-}
-
-func (c *StdioConn) WaitErr() error {
-	return c.waitErr
 }
 
 func (c *StdioConn) Read(b []byte) (int, error)  { return c.stdin.Read(b) }
@@ -52,18 +34,24 @@ func (c *StdioConn) Write(b []byte) (int, error) { return c.stdout.Write(b) }
 func (c *StdioConn) LocalAddr() net.Addr         { return stdioaddr }
 func (c *StdioConn) RemoteAddr() net.Addr        { return stdioaddr }
 
-func (c *StdioConn) Close() (ret error) {
+func (c *StdioConn) close() (ret error) {
 	if err := c.stdin.Close(); err != nil {
 		ret = err
 	}
 	if err := c.stdout.Close(); err != nil {
 		ret = err
 	}
-	<-c.exited
-	if c.waitErr != nil {
-		ret = c.waitErr
+	if err := c.cmd.Wait(); err != nil {
+		ret = err
 	}
 	return
+}
+
+func (c *StdioConn) Close() (ret error) {
+	c.closeOnce.Do(func() {
+		c.closeErr = c.close()
+	})
+	return c.closeErr
 }
 
 func (c *StdioConn) SetDeadline(t time.Time) error {
