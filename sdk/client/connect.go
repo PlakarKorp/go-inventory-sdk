@@ -59,18 +59,25 @@ func spawn(ctx context.Context, exe string, args []string) (*grpc.ClientConn, er
 	}
 
 	if err := cmd.Start(); err != nil {
+		wr.Close()
+		rd.Close()
 		return nil, err
 	}
 
 	conn := NewStdioConn(stdin, stdout, cmd)
 
-	return grpc.NewClient("stdio",
+	client, err := grpc.NewClient("stdio",
 		grpc.WithContextDialer(func(ctx context.Context, _ string) (net.Conn, error) {
 			return conn, nil
 		}),
 		grpc.WithTransportCredentials(insecure.NewCredentials()),
 		grpc.WithIdleTimeout(0),
 	)
+	if err != nil {
+		conn.Close()
+		return nil, err
+	}
+	return client, err
 }
 
 func ExecInventory(ctx context.Context, params map[string]string, exe string, args []string) (inventory.Inventory, error) {
