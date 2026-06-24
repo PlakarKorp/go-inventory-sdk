@@ -69,6 +69,7 @@ func spawn(ctx context.Context, exe string, args []string) (*grpc.ClientConn, er
 			return conn, nil
 		}),
 		grpc.WithTransportCredentials(insecure.NewCredentials()),
+		grpc.WithIdleTimeout(0),
 	)
 }
 
