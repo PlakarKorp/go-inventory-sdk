@@ -21,7 +21,7 @@ your inventory is providing.
 ## Example Inventory
 
 A complete example that can used for scaffolding purposes can be found
-in the [example][./example] directory.
+in the [example](./example) directory.
 
 To try it out:
 
