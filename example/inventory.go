@@ -10,7 +10,7 @@ import (
 )
 
 type example struct {
-	// [...]
+	// ...
 }
 
 func NewInventory(ctx context.Context, params map[string]string) (inventory.Inventory, error) {
@@ -51,6 +51,7 @@ func (ex *example) listFoos(ctx context.Context, resources chan<- *inventory.Inv
 			Name:     fmt.Sprintf("example-foo-%d", i),
 			Region:   "eu",
 			Service:  "foo",
+			Country:  inventory.Country("FR"),
 			Endpoints: []inventory.HostEndpoint{{
 				Type:     inventory.EndpointIdentifier,
 				Endpoint: fmt.Sprintf("foo-%d", i),

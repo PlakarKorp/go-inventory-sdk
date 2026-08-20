@@ -33,6 +33,11 @@ message InventoryEntry {
   string resource = 8;
   bytes details = 9;
   repeated HostEndpoint endpoints = 10;
+
+  // Where this resource physically sits, as an ISO 3166-1 alpha-2 code.
+  // Empty means unknown -- never "same as the inventory", which has no country
+  // of its own.
+  string country = 11;
 }
 
 message ListRequest {
