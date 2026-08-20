@@ -50,6 +50,9 @@ type InventoryEntry struct {
 	Resource  string // s3:bucket, ec2:volume, ...
 	Details   []byte // Additional backend-specific content
 	Endpoints []HostEndpoint
+
+	// Fill via CountryOf. Report it on every entry you can.
+	Country Country
 }
 
 func EndpointTypeFromString(t string) (EndpointType, error) {

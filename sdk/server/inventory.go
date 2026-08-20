@@ -57,6 +57,8 @@ func (g *grpcInventoryServer) List(req *sdk.ListRequest, stream grpc.ServerStrea
 				Service:  res.Service,
 				Resource: res.Resource,
 				Details:  res.Details,
+				// Re-normalized: an integration may skip CountryOf.
+				Country: string(inventory.CountryOf(string(res.Country))),
 			}
 
 			for _, e := range res.Endpoints {

@@ -102,6 +102,7 @@ func (inv *grpcInventoryClient) List(ctx context.Context, entries chan<- *invent
 			Service:  res.Entry.Service,
 			Resource: res.Entry.Resource,
 			Details:  res.Entry.Details,
+			Country:  inventory.CountryOf(res.Entry.GetCountry()),
 		}
 
 		for _, e := range res.Entry.GetEndpoints() {
